@@ -12,11 +12,12 @@ services:
         INSTALL_NODE: "true"
         NODE_VERSION: "lts/*"
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
-        # USER_UID: 1000 - from devcontainer template
-        # USER_GID: 1000 - from devcontainer template
-        NB_USER: "jovyan" 
+      # USER_UID: 1000 
+      # USER_GID: 1000
+      # USERNAME: "vscode"
+        NB_USER: "jovyan"
         NB_UID: 1000 # from https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile
-        NB_GID: 100
+        NB_GID: 1000
 
         #ARGS from compilation
         INSTALL_ZSH: "true"

@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED 1
 
 # copy args to equivalents for now
 ARG NB_UID=1000
-ARG NB_GID=100
+ARG NB_GID=1000
 ARG NB_USER="jovyan"
 
 ARG USERNAME=$NB_USER
@@ -20,13 +20,16 @@ ARG USER_UID=$NB_UID
 ARG USER_GID=$NB_GID
 
 USER root
-
 # RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then groupmod --gid $USER_GID $USERNAME && usermod --uid $USER_UID --gid $USER_GID jovyan; fi
 # replacement from vscode docs https://code.visualstudio.com/docs/remote/containers-advanced
 # !!!! problem with code, is it needed? !!!!!
-# RUN groupmod --gid $USER_GID $USERNAME \
-#     && usermod --uid $USER_UID --gid $USER_GID $USERNAME \
-#     && chown -R $USER_UID:$USER_GID /home/$USERNAME
+
+# insterted > create usergroup for username to match with devcontainer structures
+RUN DEBIAN_FRONTEND=noninteractive \
+    && groupadd ${NB_USER} \
+    && groupmod --gid $USER_GID $USERNAME \
+    && usermod --uid $USER_UID --gid $USER_GID $USERNAME \
+    && chown -R $USER_UID:$USER_GID /home/$USERNAME
 
 # ----- reset to non root user ----
  
@@ -80,8 +83,8 @@ RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then /opt/conda/bin/conda env up
     && rm -rf /tmp/conda-tmp
 
 # ----- reset to non root user ----
- 
-USER $NB_UID
+
+USER root
 
 # vvvvvvv from R devcontainer vvvvvvvvvvv
 # https://github.com/microsoft/vscode-dev-containers/blob/master/containers/r/.devcontainer/Dockerfile
@@ -93,6 +96,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         devtools \
         languageserver \
     && rm -rf /tmp/downloaded_packages
+
+USER $NB_UID
 
 
 # !!!!!  need to add from Julia devcontainer !!!!!
@@ -106,6 +111,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     apt-get install -y --no-install-recommends \
 #     <additional-package-name> && \
 #     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
 
 USER $NB_UID
 
