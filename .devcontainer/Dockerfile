@@ -88,16 +88,23 @@ USER root
 
 # vvvvvvv from R devcontainer vvvvvvvvvvv
 # https://github.com/microsoft/vscode-dev-containers/blob/master/containers/r/.devcontainer/Dockerfile
+# need to fix langauge server to work, get from https://hub.docker.com/r/rocker/r-ver
 
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get autoremove -y && apt-get clean -y \
-    && python3 -m pip --no-cache-dir install radian \
-    && install2.r --error --skipinstalled --repos ${CRAN} --ncpus -1 \
-        devtools \
-        languageserver \
-    && rm -rf /tmp/downloaded_packages
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && apt-get -y install \
+#         python3-pip \
+#         libgit2-dev \
+#         libcurl4-openssl-dev \
+#         libssl-dev \
+#         libxml2-dev \
+#     && apt-get autoremove -y && apt-get clean -y \
+#     && python3 -m pip --no-cache-dir install radian \
+#     && install2.r --error --skipinstalled --repos ${CRAN} --ncpus -1 \
+#         devtools \
+#         languageserver \
+#     && rm -rf /tmp/downloaded_packages
 
-USER $NB_UID
+# USER $NB_UID
 
 
 # !!!!!  need to add from Julia devcontainer !!!!!
